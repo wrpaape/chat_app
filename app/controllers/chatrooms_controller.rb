@@ -2,13 +2,63 @@ class ChatroomsController < ApplicationController
 
   def index
     begin
-      all_chatrooms = Chatroom.all
-      render_response(all_chatrooms, 200)
-
+      if params[:id] || params[:user_id] || params[:message_id]
+        chatroom_match = Chatroom.new
+        response, response_code = chatroom_match.get(params)
+        render_response(response, response_code)
+      else
+        all_chatrooms = Chatroom.all
+        render_response(all_chatrooms, 200)
+      end
       rescue ActiveRecord::RecordNotFound => error
         render_response(error.message, 404)
       rescue StandardError => error
         render_response(error.message, 422)
+    end
+  end
+
+  def new
+    new_chatroom = Chatroom.create
+    render_response(new_chatroom, 200)
+  end
+
+  def create
+    new_chatroom = Chatroom.create(user_id: params[:user_id], message_id: params[:message_id])
+    render_response(new_chatroom, 200)
+  end
+
+  def show
+    begin
+      chatroom_match = Chatroom.new
+      response, response_code = chatroom_match.get(params)
+      render_response(response, response_code)
+    rescue ActiveRecord::RecordNotFound => error
+      render_response(error.message, 404)
+    rescue StandardError => error
+      render_response(error.message, 422)
+    end
+  end
+
+  def update
+    begin
+      chatroom = Chatroom.find(params[:id])
+      render_response(chatroom, 200)
+    rescue ActiveRecord::RecordNotFound => error
+      render_response(error.message, 404)
+    rescue StandardError => error
+      render_response(error.message, 422)
+    end
+  end
+
+  def destroy
+    begin
+      chatroom = Chatroom.find(params[:id])
+      chatroom.destroy
+      render_response("deleted", 200)
+    rescue ActiveRecord::RecordNotFound => error
+      render_response(error.message, 404)
+    rescue StandardError => error
+      render_response(error.message, 422)
     end
   end
 
