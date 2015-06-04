@@ -33,6 +33,8 @@ class UsersController < ApplicationController
           create_params[k] = v if k == "name" || k == "password" || k == "message_ids" || k == "settings"
         end
         new_user = User.create(create_params)
+        new_user.message_ids = new_user.message_ids.to_s
+        new_user.save
         render_response(new_user, 200)
       end
       rescue ActiveRecord::RecordNotFound => error
