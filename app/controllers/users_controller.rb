@@ -23,8 +23,23 @@ class UsersController < ApplicationController
   end
 
   def create
-    new_user = User.create(name: params[:name], password: params[:password], settings: params[:settings], message_ids: params[:message_ids])
-    render_response(new_user, 200)
+    begin
+      new_user = User.new
+      if new_user.name_taken?(params[:name])
+        render_response("'#{params[:name]}' has been already taken", 200)
+      else
+        create_params = {}
+        params.each do |k, v|
+          create_params[k] = v if k == "name" || k == "password" || k == "message_ids" || k == "settings"
+        end
+        new_user = User.create(create_params)
+        render_response(new_user, 200)
+      end
+      rescue ActiveRecord::RecordNotFound => error
+        render_response(error.message, 404)
+      rescue StandardError => error
+        render_response(error.message, 422)
+    end
   end
 
   def show

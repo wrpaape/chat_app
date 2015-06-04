@@ -13,5 +13,9 @@ class User < ActiveRecord::Base
 
     [response, response_code]
   end
+
+  def name_taken?(name)
+    User.where(name: name).size > 0 ? true : false
+  end
 end
 

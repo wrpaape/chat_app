@@ -23,8 +23,18 @@ class MessagesController < ApplicationController
   end
 
   def create
-    new_message = Message.create(user_id: params[user_id], body: params[:body])
-    render_response(new_message, 200)
+    begin
+      create_params = {}
+      params.each do |k, v|
+        create_params[k] = v if k == "user_id" || k == "body"
+      end
+      new_message = Message.create(create_params)
+      render_response(new_message, 200)
+      rescue ActiveRecord::RecordNotFound => error
+        render_response(error.message, 404)
+      rescue StandardError => error
+        render_response(error.message, 422)
+    end
   end
 
   def show

@@ -23,8 +23,18 @@ class ChatroomsController < ApplicationController
   end
 
   def create
-    new_chatroom = Chatroom.create(user_id: params[:user_id], message_id: params[:message_id])
-    render_response(new_chatroom, 200)
+    begin
+      create_params = {}
+      params.each do |k, v|
+        create_params[k] = v if k == "user_id" || k == "message_id"
+      end
+      new_chatroom = Chatroom.create(create_params)
+      render_response(new_chatroom, 200)
+      rescue ActiveRecord::RecordNotFound => error
+        render_response(error.message, 404)
+      rescue StandardError => error
+        render_response(error.message, 422)
+    end
   end
 
   def show
