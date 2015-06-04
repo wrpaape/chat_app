@@ -17,5 +17,16 @@ class User < ActiveRecord::Base
   def name_taken?(name)
     User.where(name: name).size > 0 ? true : false
   end
+
+  def update_message_history(message_id)
+    self.message_ids += message_id.to_s + "+"
+  end
+
+  def get_message_history
+    message_ids = params[:message_ids].split("+")
+    message_ids.map! { |id| id.to_i }
+
+    message_history = Message.where(id: message_ids)
+  end
 end
 

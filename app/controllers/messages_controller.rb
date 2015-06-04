@@ -29,6 +29,12 @@ class MessagesController < ApplicationController
         create_params[k] = v if k == "user_id" || k == "body"
       end
       new_message = Message.create(create_params)
+
+      current_user = User.find(params[:user_id])
+      current_user.update_message_history(new_message.id)
+
+      Chatroom.create(user_id: params[:user_id], message_id: new_message.id)
+
       render_response(new_message, 200)
       rescue ActiveRecord::RecordNotFound => error
         render_response(error.message, 404)

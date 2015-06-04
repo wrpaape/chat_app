@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150604181709) do
+ActiveRecord::Schema.define(version: 20150604225836) do
 
   create_table "chatrooms", force: :cascade do |t|
     t.integer  "user_id"
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 20150604181709) do
     t.string   "name",                            null: false
     t.string   "password",                        null: false
     t.string   "settings",    default: "default"
-    t.text     "message_ids"
+    t.text     "message_ids", default: ""
     t.datetime "created_at",                      null: false
     t.datetime "updated_at",                      null: false
   end
