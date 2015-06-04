@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
 
   def update_message_history(message_id)
     self.message_ids += message_id.to_s + "+"
+    puts self.message_ids
+    self.save
   end
 
   def get_message_history

@@ -31,6 +31,11 @@ class MessagesController < ApplicationController
       new_message = Message.create(create_params)
 
       current_user = User.find(params[:user_id])
+      puts new_message.id.inspect
+      puts "************"
+      puts "************"
+      puts "************"
+
       current_user.update_message_history(new_message.id)
 
       Chatroom.create(user_id: params[:user_id], message_id: new_message.id)
