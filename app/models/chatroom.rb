@@ -13,8 +13,9 @@ class Chatroom < ActiveRecord::Base
     [response, response_code]
   end
 
-  def join(user_name)
+  def join(user_id)
     response_code = "200"
+    user_name = User.find(user_id).name
     if !self.current_users.split("░").include?(user_name)
       self.current_users += user_name + "░"
       self.save
@@ -36,6 +37,30 @@ class Chatroom < ActiveRecord::Base
     end
 
     contents_split2.each do |array|
+      contents_hash[:user_history] <<  array[0].split("░").first
+      contents_hash[:message_history] << array[1].split("░").first
+    end
+
+    [contents_hash, response_code]
+  end
+
+  def get_recent_contents(recent_timespan)
+    current_time = Time.new
+    cutoff_time = current_time - recent_timespan
+    response_code = "200"
+    contents_hash = {}
+    contents_hash[:user_history] = []
+    contents_hash[:message_history] = []
+    contents_split2 = []
+    contents_split1 = self.contents.split("▓")
+    contents_split1.each do |pairs_w_ids|
+      contents_split2 << pairs_w_ids.split("▒")
+    end
+
+    contents_split2.each do |array|
+      message_id = array[1].split("░").last.to_i
+      message_time = Message.find(message_id).created_at
+      next if message_time < cutoff_time
       contents_hash[:user_history] <<  array[0].split("░").first
       contents_hash[:message_history] << array[1].split("░").first
     end

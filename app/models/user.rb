@@ -19,15 +19,40 @@ class User < ActiveRecord::Base
   end
 
   def update_message_history(message_id)
+    self.message_count += 1
     self.message_ids += message_id.to_s + "+"
     self.save
   end
 
-  def get_message_history
-    message_ids = params[:message_ids].split("+")
-    message_ids.map! { |id| id.to_i }
+  def get_message_history(user)
+    response_code = "200"
+    message_history = {}
+    message_history[:body] = []
+    message_history[:timestamp] = []
+    message_history[:chatroom] = []
+    message_ids = user.message_ids.split("+")
+    message_ids.map! { |id| id = id.to_i }
+    messages = Message.where(id: message_ids)
+    messages.each do |message|
+      message_history[:body] << message.body
+      message_history[:timestamp] << message.created_at
+      message_history[:chatroom] << Chatroom.find(message.chatroom_id).name
+    end
+    [message_history, response_code]
+  end
 
-    message_history = Message.where(id: message_ids)
+  def get_leaderboard(timespan)
+    response_code = "200"
+    leaderboard
+    message_ids = user.message_ids.split("+")
+    message_ids.map! { |id| id = id.to_i }
+    messages = Message.where(id: message_ids)
+    messages.each do |message|
+      message_history[:body] << message.body
+      message_history[:timestamp] << message.created_at
+      message_history[:chatroom] << Chatroom.find(message.chatroom_id).name
+    end
+    [message_history, response_code]
   end
 end
 

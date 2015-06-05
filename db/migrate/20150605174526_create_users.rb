@@ -5,6 +5,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :password, null: false
       t.string :settings, default: "default"
       t.text :message_ids, default: ""
+      t.integer :message_count, default: 0
 
       t.timestamps null: false
     end

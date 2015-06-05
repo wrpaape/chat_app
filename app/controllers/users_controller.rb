@@ -42,10 +42,33 @@ class UsersController < ApplicationController
     end
   end
 
+  def messages
+    begin
+      current_user = User.find(params[:id])
+      response, response_code = current_user.get_message_history(current_user)
+      render_response(response, response_code)
+    rescue ActiveRecord::RecordNotFound => error
+      render_response(error.message, 404)
+    rescue StandardError => error
+      render_response(error.message, 422)
+    end
+  end
+
   def show
     begin
       user_match = User.new
       response, response_code = user_match.get(params)
+      render_response(response, response_code)
+    rescue ActiveRecord::RecordNotFound => error
+      render_response(error.message, 404)
+    rescue StandardError => error
+      render_response(error.message, 422)
+    end
+  end
+
+  def leaderboard
+      user = User.new
+      response, response_code = user.get_leaderboard(params[:timespan])
       render_response(response, response_code)
     rescue ActiveRecord::RecordNotFound => error
       render_response(error.message, 404)
