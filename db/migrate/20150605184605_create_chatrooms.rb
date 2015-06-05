@@ -3,6 +3,7 @@ class CreateChatrooms < ActiveRecord::Migration
     create_table :chatrooms do |t|
       t.string :name, default: ""
       t.text :current_users, default: ""
+      t.integer :user_count, default: 0
       t.integer :message_count, default: 0
       t.text :contents, default: ""
 

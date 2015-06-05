@@ -11,11 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150605174526) do
+ActiveRecord::Schema.define(version: 20150605184605) do
 
   create_table "chatrooms", force: :cascade do |t|
     t.string   "name",          default: ""
     t.text     "current_users", default: ""
+    t.integer  "user_count",    default: 0
     t.integer  "message_count", default: 0
     t.text     "contents",      default: ""
     t.datetime "created_at",                 null: false

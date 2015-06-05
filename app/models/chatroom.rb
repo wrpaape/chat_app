@@ -17,6 +17,7 @@ class Chatroom < ActiveRecord::Base
     response_code = "200"
     user_name = User.find(user_id).name
     if !self.current_users.split("░").include?(user_name)
+      self.user_count += 1
       self.current_users += user_name + "░"
       self.save
       [self, response_code]
@@ -25,11 +26,24 @@ class Chatroom < ActiveRecord::Base
     end
   end
 
+  def leave(user_id)
+    response_code = "200"
+    user_name = User.find(user_id).name
+    users = self.current_users.split("░")
+    if users.include?(user_name)
+      self.user_count -= 1
+      users.delete(user_name)
+      self.current_users = users.join("░") + "░"
+      self.save
+      [self, response_code]
+    else
+      ["#{user_name} is not chatting in #{self.name}", response_code]
+    end
+  end
+
   def get_contents
     response_code = "200"
-    contents_hash = {}
-    contents_hash[:user_history] = []
-    contents_hash[:message_history] = []
+    contents = []
     contents_split2 = []
     contents_split1 = self.contents.split("▓")
     contents_split1.each do |pairs_w_ids|
@@ -37,20 +51,20 @@ class Chatroom < ActiveRecord::Base
     end
 
     contents_split2.each do |array|
-      contents_hash[:user_history] <<  array[0].split("░").first
-      contents_hash[:message_history] << array[1].split("░").first
+      entry_hash = {}
+      entry_hash[:name] =  array[0].split("░").first
+      entry_hash[:body] = array[1].split("░").first
+      contents << entry_hash
     end
 
-    [contents_hash, response_code]
+    [contents, response_code]
   end
 
   def get_recent_contents(recent_timespan)
     current_time = Time.new
     cutoff_time = current_time - recent_timespan
     response_code = "200"
-    contents_hash = {}
-    contents_hash[:user_history] = []
-    contents_hash[:message_history] = []
+    contents = []
     contents_split2 = []
     contents_split1 = self.contents.split("▓")
     contents_split1.each do |pairs_w_ids|
@@ -61,11 +75,20 @@ class Chatroom < ActiveRecord::Base
       message_id = array[1].split("░").last.to_i
       message_time = Message.find(message_id).created_at
       next if message_time < cutoff_time
-      contents_hash[:user_history] <<  array[0].split("░").first
-      contents_hash[:message_history] << array[1].split("░").first
+      entry_hash = {}
+      entry_hash[:name] =  array[0].split("░").first
+      entry_hash[:body] = array[1].split("░").first
+      contents << entry_hash
     end
 
-    [contents_hash, response_code]
+    [contents, response_code]
+  end
+
+  def get_current_users
+    response_code = "200"
+    self.contents += current_user.name + "░" + current_user.id.to_s + "▒" + new_message.body + "░" + new_message.id.to_s + "▓"
+    self.save
+    [self, response_code]
   end
 
   def new_message(current_user, new_message)

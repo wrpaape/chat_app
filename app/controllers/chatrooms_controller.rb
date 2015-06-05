@@ -22,10 +22,34 @@ class ChatroomsController < ApplicationController
     render_response(new_chatroom, 200)
   end
 
+  def leave
+    begin
+      current_chatroom = Chatroom.find(params[:id])
+      response, response_code = current_chatroom.leave(params[:user_id])
+      render_response(response, response_code)
+      rescue ActiveRecord::RecordNotFound => error
+        render_response(error.message, 404)
+      rescue StandardError => error
+        render_response(error.message, 422)
+    end
+  end
+
   def join
     begin
       current_chatroom = Chatroom.find(params[:id])
       response, response_code = current_chatroom.join(params[:user_id])
+      render_response(response, response_code)
+      rescue ActiveRecord::RecordNotFound => error
+        render_response(error.message, 404)
+      rescue StandardError => error
+        render_response(error.message, 422)
+    end
+  end
+
+  def contents
+    begin
+      current_chatroom = Chatroom.find(params[:id])
+      response, response_code = current_chatroom.get_current_users
       render_response(response, response_code)
       rescue ActiveRecord::RecordNotFound => error
         render_response(error.message, 404)
@@ -48,9 +72,8 @@ class ChatroomsController < ApplicationController
 
   def recent
     begin
-      recent_timespan = 300
       current_chatroom = Chatroom.find(params[:id])
-      response, response_code = current_chatroom.get_recent_contents(recent_timespan)
+      response, response_code = current_chatroom.get_recent_contents(params[:timespan].to_i)
       render_response(response, response_code)
       rescue ActiveRecord::RecordNotFound => error
         render_response(error.message, 404)
