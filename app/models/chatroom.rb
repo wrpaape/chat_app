@@ -32,8 +32,13 @@ class Chatroom < ActiveRecord::Base
     users = self.current_users.split("░")
     if users.include?(user_name)
       self.user_count -= 1
-      users.delete(user_name)
-      self.current_users = users.join("░") + "░"
+      self.save
+      if self.user_count == 0
+        self.current_users = ""
+      else
+        users.delete(user_name)
+        self.current_users = users.join("░") + "░"
+      end
       self.save
       [self, response_code]
     else
@@ -44,6 +49,7 @@ class Chatroom < ActiveRecord::Base
   def get_contents
     response_code = "200"
     contents = []
+    return [contents, response_code] if self.contents == ""
     contents_split2 = []
     contents_split1 = self.contents.split("▓")
     contents_split1.each do |pairs_w_ids|
@@ -61,10 +67,11 @@ class Chatroom < ActiveRecord::Base
   end
 
   def get_recent_contents(recent_timespan)
-    current_time = Time.new
-    cutoff_time = current_time - recent_timespan
     response_code = "200"
     contents = []
+    return [contents, response_code] if self.contents == ""
+    current_time = Time.new
+    cutoff_time = current_time - recent_timespan
     contents_split2 = []
     contents_split1 = self.contents.split("▓")
     contents_split1.each do |pairs_w_ids|
@@ -86,9 +93,8 @@ class Chatroom < ActiveRecord::Base
 
   def get_current_users
     response_code = "200"
-    self.contents += current_user.name + "░" + current_user.id.to_s + "▒" + new_message.body + "░" + new_message.id.to_s + "▓"
-    self.save
-    [self, response_code]
+    current_users_array = self.current_users.split("░")
+    [current_users_array, response_code]
   end
 
   def new_message(current_user, new_message)

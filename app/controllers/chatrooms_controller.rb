@@ -46,7 +46,7 @@ class ChatroomsController < ApplicationController
     end
   end
 
-  def contents
+  def users
     begin
       current_chatroom = Chatroom.find(params[:id])
       response, response_code = current_chatroom.get_current_users
@@ -86,7 +86,7 @@ class ChatroomsController < ApplicationController
     begin
       create_params = {}
       params.each do |k, v|
-        create_params[k] = v if k == "name" || k == "current_users" || k == "message_count" || k = "contents"
+        create_params[k] = v if k == "name"
       end
       new_chatroom = Chatroom.create(create_params)
       render_response(new_chatroom, 200)
