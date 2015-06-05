@@ -16,15 +16,13 @@ class User < ActiveRecord::Base
 
   def update(params)
     response_code = "200"
-    if params["password"] && params["settings"]
+    name, password = [params["name"], params["password"]]
+    if name && password
+      response = User.create(name: name, password: password, settings: self.settings, message_ids: self.message_ids, message_count: self.message_count)
+    elsif name
+      response = User.create(name: name, password: self.password, settings: self.settings, message_ids: self.message_ids, message_count: self.message_count)
+    elsif password
       self.password = params["password"]
-      self.settings = params["settings"]
-      response = self
-    elsif params["password"]
-      self.password = params["password"]
-      response = self
-    elsif params["settings"]
-      self.settings = params["settings"]
       response = self
     else
       response = "parameter not found"
@@ -42,6 +40,31 @@ class User < ActiveRecord::Base
     self.message_count += 1
     self.message_ids += message_id.to_s + "+"
     self.save
+  end
+
+  def settings_add(settings)
+    self.settings += settings + "+"
+    self.save
+    [self, "200"]
+  end
+
+  def settings_delete(settings)
+    response_code = "200"
+    settings_array = self.settings.split("+")
+    if settings_array.include?(settings)
+      settings_array.delete(settings)
+      if settings_array.size == 0
+        self.settings = ""
+      else
+        self.settings = settings_array.join("+") + "+"
+      end
+      self.save
+      response = self
+    else
+      response = "setting not found"
+      response_code = "404"
+    end
+    [response, response_code]
   end
 
   def get_message_history(user)
