@@ -42,17 +42,28 @@ class User < ActiveRecord::Base
   end
 
   def get_leaderboard(timespan)
+    current_time = Time.new
+    cutoff_time = current_time - timespan
     response_code = "200"
-    leaderboard
-    message_ids = user.message_ids.split("+")
-    message_ids.map! { |id| id = id.to_i }
-    messages = Message.where(id: message_ids)
-    messages.each do |message|
-      message_history[:body] << message.body
-      message_history[:timestamp] << message.created_at
-      message_history[:chatroom] << Chatroom.find(message.chatroom_id).name
+    leaderboard = {}
+    leaderboard[:user_name] = []
+    leaderboard[:message_count] = []
+    leaderboard[:recent_users] = []
+    top_users = User.order(:message_count).limit(10)
+    top_users.each do |top_user|
+      leaderboard[:user_name] << top_user.name
+      leaderboard[:message_count] << top_user.message_count
     end
-    [message_history, response_code]
+    recent_messages = Message.where("created_at > ?", cutoff_time).order(created_at: :desc)
+    recent_ids = []
+    recent_messages.each do |recent_message|
+      recent_ids << recent_message.user_id unless recent_ids.include?(recent_message.user_id)
+    end
+    recent_users = User.where(id: recent_ids)
+    recent_users.each do |recent_user|
+      leaderboard[:recent_users] << recent_user.name
+    end
+    [leaderboard, response_code]
   end
 end
 

@@ -67,8 +67,9 @@ class UsersController < ApplicationController
   end
 
   def leaderboard
+    begin
       user = User.new
-      response, response_code = user.get_leaderboard(params[:timespan])
+      response, response_code = user.get_leaderboard(params[:timespan].to_i)
       render_response(response, response_code)
     rescue ActiveRecord::RecordNotFound => error
       render_response(error.message, 404)
