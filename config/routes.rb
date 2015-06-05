@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
 
   get 'chatrooms/new', to: 'chatrooms#new'
+  get 'chatrooms/active', to: 'chatrooms#active'
   get 'chatrooms/:id/contents/recent', to: 'chatrooms#recent'
   get 'chatrooms/:id/contents', to: 'chatrooms#contents'
   get 'chatrooms/:id/users', to: 'chatrooms#users'
@@ -24,6 +25,7 @@ Rails.application.routes.draw do
   get 'users/new', to: 'users#new'
   get 'users/leaderboard', to: 'users#leaderboard'
   get 'users/:id/message_history', to: 'users#messages'
+  put 'users/:id/settings', to: 'users#settings'
   get 'users/:id', to: 'users#show'
   put 'users/:id', to: 'users#update'
   delete 'users/:id', to: 'users#destroy'

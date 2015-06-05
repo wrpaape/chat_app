@@ -19,6 +19,8 @@ class UsersController < ApplicationController
 
   def new
     new_user = User.create
+    general_chat = Chatroom.first
+    general_chat.join(new_user.id)
     render_response(new_user, 200)
   end
 
@@ -49,10 +51,10 @@ class UsersController < ApplicationController
       current_user = User.find(params[:id])
       response, response_code = current_user.get_message_history(current_user)
       render_response(response, response_code)
-    rescue ActiveRecord::RecordNotFound => error
-      render_response(error.message, 404)
-    rescue StandardError => error
-      render_response(error.message, 422)
+      rescue ActiveRecord::RecordNotFound => error
+        render_response(error.message, 404)
+      rescue StandardError => error
+        render_response(error.message, 422)
     end
   end
 
@@ -80,10 +82,29 @@ class UsersController < ApplicationController
     end
   end
 
+  def settings
+    current_user = User.find(params[:id])
+  end
+
   def update
     begin
-      user = User.find(params[:id])
-      render_response(user, 200)
+      response_code = "200"
+      current_user = User.find(params[:id])
+      update_params = {}
+      params.each do |k, v|
+        update_params[k] = v if k == "name" || k == "password" || k == "settings"
+      end
+      if update_params["name"] && update_params["password"]
+        current_user = User.create(update_params)
+        response = current_user
+      elsif update_params["name"]
+        password = current_user.password
+        current_user = User.create(name: update_params["name"], password: password)
+        response = current_user
+      else
+       response, response_code = current_user.update(update_params)
+      end
+      render_response(response, response_code)
     rescue ActiveRecord::RecordNotFound => error
       render_response(error.message, 404)
     rescue StandardError => error

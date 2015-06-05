@@ -82,6 +82,18 @@ class ChatroomsController < ApplicationController
     end
   end
 
+  def active
+    begin
+      chatroom = Chatroom.new
+      response, response_code = chatroom.get_active
+      render_response(response, response_code)
+      rescue ActiveRecord::RecordNotFound => error
+        render_response(error.message, 404)
+      rescue StandardError => error
+        render_response(error.message, 422)
+    end
+  end
+
   def create
     begin
       create_params = {}

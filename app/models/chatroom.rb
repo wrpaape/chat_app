@@ -97,6 +97,19 @@ class Chatroom < ActiveRecord::Base
     [current_users_array, response_code]
   end
 
+  def get_active
+    response_code = "200"
+    response = []
+    rank_chatrooms = Chatroom.all.order(message_count: :desc)
+    rank_chatrooms.each do |chatroom|
+      chatroom_hash = {}
+      chatroom_hash[:name] =  chatroom.name
+      chatroom_hash[:message_count] = chatroom.message_count
+      response << chatroom_hash
+    end
+    [response, response_code]
+  end
+
   def new_message(current_user, new_message)
     response_code = "200"
     self.message_count += 1

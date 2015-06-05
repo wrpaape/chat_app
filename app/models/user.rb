@@ -14,6 +14,26 @@ class User < ActiveRecord::Base
     [response, response_code]
   end
 
+  def update(params)
+    response_code = "200"
+    if params["password"] && params["settings"]
+      self.password = params["password"]
+      self.settings = params["settings"]
+      response = self
+    elsif params["password"]
+      self.password = params["password"]
+      response = self
+    elsif params["settings"]
+      self.settings = params["settings"]
+      response = self
+    else
+      response = "parameter not found"
+      response_code = "404"
+    end
+    self.save
+    [response, response_code]
+  end
+
   def name_taken?(name)
     User.where(name: name).size > 0 ? true : false
   end
