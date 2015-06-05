@@ -26,7 +26,7 @@ class ChatroomsController < ApplicationController
     begin
       create_params = {}
       params.each do |k, v|
-        create_params[k] = v if k == "user_id" || k == "message_id"
+        create_params[k] = v if k == "current_users" || k == "message_count" || k = "contents"
       end
       new_chatroom = Chatroom.create(create_params)
       render_response(new_chatroom, 200)

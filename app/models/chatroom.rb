@@ -4,7 +4,7 @@ class Chatroom < ActiveRecord::Base
     search_query = {}
 
     params.each do |k, v|
-      search_query[k] = v if k == "id" || k == "user_id" || k == "message_id"
+      search_query[k] = v if k == "id" || k == "current_users" || k == "contents"
     end
 
     response = Chatroom.where(search_query)
