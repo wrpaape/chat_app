@@ -22,11 +22,35 @@ class ChatroomsController < ApplicationController
     render_response(new_chatroom, 200)
   end
 
+  def join
+    begin
+      current_chatroom = Chatroom.find(params[:id])
+      response, response_code = current_chatroom.join(params[:user_name])
+      render_response(response, response_code)
+      rescue ActiveRecord::RecordNotFound => error
+        render_response(error.message, 404)
+      rescue StandardError => error
+        render_response(error.message, 422)
+    end
+  end
+
+  def contents
+    begin
+      current_chatroom = Chatroom.find(params[:id])
+      response, response_code = current_chatroom.get_contents
+      render_response(response, response_code)
+      rescue ActiveRecord::RecordNotFound => error
+        render_response(error.message, 404)
+      rescue StandardError => error
+        render_response(error.message, 422)
+    end
+  end
+
   def create
     begin
       create_params = {}
       params.each do |k, v|
-        create_params[k] = v if k == "current_users" || k == "message_count" || k = "contents"
+        create_params[k] = v if k == "name" || k == "current_users" || k == "message_count" || k = "contents"
       end
       new_chatroom = Chatroom.create(create_params)
       render_response(new_chatroom, 200)
@@ -52,6 +76,8 @@ class ChatroomsController < ApplicationController
   def update
     begin
       chatroom = Chatroom.find(params[:id])
+      chatroom.name = params[:name]
+      chatroom.save
       render_response(chatroom, 200)
     rescue ActiveRecord::RecordNotFound => error
       render_response(error.message, 404)

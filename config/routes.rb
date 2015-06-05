@@ -3,6 +3,8 @@ Rails.application.routes.draw do
 
 
   get 'chatrooms/new', to: 'chatrooms#new'
+  put 'chatrooms/:id/join', to: 'chatrooms#join'
+  get 'chatrooms/:id/contents', to: 'chatrooms#contents'
   get 'chatrooms/:id', to: 'chatrooms#show'
   put 'chatrooms/:id', to: 'chatrooms#update'
   delete 'chatrooms/:id', to: 'chatrooms#destroy'

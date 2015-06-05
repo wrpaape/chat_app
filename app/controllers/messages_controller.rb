@@ -26,15 +26,15 @@ class MessagesController < ApplicationController
     begin
       create_params = {}
       params.each do |k, v|
-        create_params[k] = v if k == "user_id" || k == "body"
+        create_params[k] = v if k == "user_id" || k == "chatroom_id" || k == "body"
       end
       new_message = Message.create(create_params)
 
       current_user = User.find(params[:user_id])
-
       current_user.update_message_history(new_message.id)
 
-      Chatroom.create(user_id: params[:user_id], message_id: new_message.id)
+      current_chatroom = Chatroom.find(params[:chatroom_id])
+      current_chatroom.new_message(current_user, new_message)
 
       render_response(new_message, 200)
       rescue ActiveRecord::RecordNotFound => error
