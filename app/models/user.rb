@@ -92,7 +92,7 @@ class User < ActiveRecord::Base
     leaderboard[:user_name] = []
     leaderboard[:message_count] = []
     leaderboard[:recent_users] = []
-    top_users = User.order(:message_count).limit(10)
+    top_users = User.order(message_count: :desc).limit(10)
     top_users.each do |top_user|
       leaderboard[:user_name] << top_user.name
       leaderboard[:message_count] << top_user.message_count

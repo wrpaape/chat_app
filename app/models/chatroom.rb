@@ -65,6 +65,7 @@ class Chatroom < ActiveRecord::Base
       entry_hash = {}
       entry_hash[:name] =  array[0].split("░").first
       entry_hash[:body] = array[1].split("░").first
+      entry_hash[:timestamp] = message_time.strftime("%T %p")
       contents << entry_hash
     end
 
