@@ -73,10 +73,20 @@ class Chatroom < ActiveRecord::Base
   end
 
   def filter_contents(raw_contents, user_id)
+    response_code = "200"
+    filtered_contents = []
     user_settings = User.find(user_id).settings.split("+")
+    if user_settings.include?("censor")
+      raw_contents.each do |raw_entry_hash|
+        entry_hash = {}
+        entry_hash[:name] = Swearjar.default.censor(raw_entry_hash[:name])
+        entry_hash[:body] = Swearjar.default.censor(raw_entry_hash[:body])
+        entry_hash[:timestamp] = raw_entry_hash[:timestamp]
+        filtered_contents << entry_hash
+      end
+    end
 
-    # if user_settings
-
+    [filtered_contents, response_code]
   end
 
   def get_current_users
