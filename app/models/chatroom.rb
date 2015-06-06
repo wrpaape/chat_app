@@ -110,18 +110,19 @@ class Chatroom < ActiveRecord::Base
       response << entry_hash
     end
 
-    # counts.sort!.reverse!
-    # response.each do |entry|
+    counts.sort!.reverse!
+    ranked_response = []
+    counts.each do |count|
+      response.each_with_index do |entry, ind|
+        if entry[:message_count] == count
+          ranked_response << entry
+          response.delete_at(ind)
+          break
+        end
+      end
+    end
 
-
-    # end
-    # ranked_response = []
-    # message_counts = []
-    # response.each { |entry| message_counts << entry[:message_count] }
-    # message_counts.sort!
-    # message_counts.each { |mc| ranked_response <<  }
-
-    [response, response_code]
+    [ranked_response, response_code]
   end
 
   def get_active
