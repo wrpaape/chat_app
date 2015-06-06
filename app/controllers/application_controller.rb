@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
 # This is used to allow the cross origin POST requests made by confroom kiosk app.
   def set_access_control_headers
     headers['Access-Control-Allow-Origin'] = "*"
-    headers['Access-Control-Request-Method'] = %w{GET POST OPTIONS}.join(",")
+    headers['Access-Control-Request-Method'] = %w{GET PUT POST DELETE OPTIONS}.join(",")
   end
 
   protect_from_forgery with: :null_session
