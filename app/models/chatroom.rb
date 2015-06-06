@@ -76,7 +76,7 @@ class Chatroom < ActiveRecord::Base
     response_code = "200"
     filtered_contents = []
     user_settings = User.find(user_id).settings.split("+")
-    if user_settings.include?("censor")
+    if user_settings.include?("default")
       raw_contents.each do |raw_entry_hash|
         entry_hash = {}
         entry_hash[:name] = Swearjar.default.censor(raw_entry_hash[:name])
@@ -93,6 +93,7 @@ class Chatroom < ActiveRecord::Base
     response_code = "200"
     current_chatroom_id = self.id
     response = []
+    counts = []
     current_users_array = self.current_users.split("░")
     current_users = User.where(name: current_users_array)
     current_users.each do |user|
@@ -105,8 +106,20 @@ class Chatroom < ActiveRecord::Base
       entry_hash = {}
       entry_hash[:name] = user.name
       entry_hash[:message_count] = chatroom_message_count
+      counts << chatroom_message_count
       response << entry_hash
     end
+
+    # counts.sort!.reverse!
+    # response.each do |entry|
+
+
+    # end
+    # ranked_response = []
+    # message_counts = []
+    # response.each { |entry| message_counts << entry[:message_count] }
+    # message_counts.sort!
+    # message_counts.each { |mc| ranked_response <<  }
 
     [response, response_code]
   end

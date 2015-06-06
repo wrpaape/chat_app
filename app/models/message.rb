@@ -12,5 +12,21 @@ class Message < ActiveRecord::Base
 
     [response, response_code]
   end
+
+  def chatbot(command, chatbot_hash)
+    chatbot_hash.each { |cmd, resp| response = resp if command == cmd.to_s}
+
+    case response
+    when "lolbombx"
+      response = chatbot_hash.
+      num_bombs = command[8..-1].to_i
+      num_bombs.times do
+        lolbomb = Message.create()
+
+      end
+    end
+
+
+  end
 end
 

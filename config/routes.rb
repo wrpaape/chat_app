@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   post 'chatrooms/:id/join_room', to: 'chatrooms#join_room'
   post 'chatrooms/:id/join', to: 'chatrooms#join'
   get 'chatrooms/:id', to: 'chatrooms#show'
-  put 'chatrooms/:id', to: 'chatrooms#update'
+  post 'chatrooms/:id', to: 'chatrooms#update'
   delete 'chatrooms/:id', to: 'chatrooms#destroy'
   get 'chatrooms', to: 'chatrooms#index'
   post 'chatrooms', to: 'chatrooms#create'

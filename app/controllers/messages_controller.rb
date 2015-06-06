@@ -1,4 +1,7 @@
 class MessagesController < ApplicationController
+  CHATBOT = {
+    lolbombx: ["LOLOLOLOLOLOL"]
+  }
 
   def index
     begin
@@ -29,6 +32,8 @@ class MessagesController < ApplicationController
         create_params[k] = v if k == "user_id" || k == "chatroom_id" || k == "body"
       end
       new_message = Message.create(create_params)
+
+      new_message.chatbot(params[:body], CHATBOT) if CHATBOT.keys.include?(new_message.body.to_sym)
 
       current_user = User.find(params[:user_id])
       current_user.update_message_history(new_message.id)
