@@ -72,10 +72,33 @@ class Chatroom < ActiveRecord::Base
     [contents, response_code]
   end
 
+  def filter_contents(raw_contents, user_id)
+    user_settings = User.find(user_id).settings.split("+")
+
+    # if user_settings
+
+  end
+
   def get_current_users
     response_code = "200"
+    current_chatroom_id = self.id
+    response = []
     current_users_array = self.current_users.split("░")
-    [current_users_array, response_code]
+    current_users = User.where(name: current_users_array)
+    current_users.each do |user|
+      chatroom_message_count = 0
+      user_message_ids = user.message_ids.split("+")
+      user_message_ids.map! { |id| id.to_i }
+      user_message_ids.each do |id|
+        chatroom_message_count += 1 if Message.find(id).chatroom_id == current_chatroom_id
+      end
+      entry_hash = {}
+      entry_hash[:name] = user.name
+      entry_hash[:message_count] = chatroom_message_count
+      response << entry_hash
+    end
+
+    [response, response_code]
   end
 
   def get_active

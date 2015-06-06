@@ -78,7 +78,7 @@ class ChatroomsController < ApplicationController
         response, response_code = current_chatroom.get_contents(Time.new.to_i)
       end
 
-    # if params[:user_id]
+    current_chatroom.filter_contents(response, params[:user_id]) if params[:user_id]
 
       render_response(response, response_code)
       rescue ActiveRecord::RecordNotFound => error

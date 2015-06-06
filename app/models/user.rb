@@ -88,14 +88,14 @@ class User < ActiveRecord::Base
     current_time = Time.new
     cutoff_time = current_time - timespan
     response_code = "200"
-    leaderboard = {}
-    leaderboard[:user_name] = []
-    leaderboard[:message_count] = []
+    leaderboard = []
     leaderboard[:recent_users] = []
     top_users = User.order(message_count: :desc).limit(10)
     top_users.each do |top_user|
-      leaderboard[:user_name] << top_user.name
-      leaderboard[:message_count] << top_user.message_count
+      entry = {}
+      entry[:user_name] = top_user.name
+      entry[:message_count] = top_user.message_count
+      leaderboard << entry
     end
     recent_messages = Message.where("created_at > ?", cutoff_time).order(created_at: :desc)
     recent_ids = []
