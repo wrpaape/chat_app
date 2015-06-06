@@ -61,19 +61,14 @@ class ChatroomsController < ApplicationController
   def contents
     begin
       current_chatroom = Chatroom.find(params[:id])
-      response, response_code = current_chatroom.get_contents
-      render_response(response, response_code)
-      rescue ActiveRecord::RecordNotFound => error
-        render_response(error.message, 404)
-      rescue StandardError => error
-        render_response(error.message, 422)
-    end
-  end
+      if params[:timespan]
+        response, response_code = current_chatroom.get_contents(params[:timespan].to_i)
+      else
+        response, response_code = current_chatroom.get_contents(Time.new.to_i)
+      end
 
-  def recent
-    begin
-      current_chatroom = Chatroom.find(params[:id])
-      response, response_code = current_chatroom.get_recent_contents(params[:timespan].to_i)
+    if params[:user_id]
+
       render_response(response, response_code)
       rescue ActiveRecord::RecordNotFound => error
         render_response(error.message, 404)

@@ -4,7 +4,6 @@ Rails.application.routes.draw do
 
   get 'chatrooms/new', to: 'chatrooms#new'
   get 'chatrooms/active', to: 'chatrooms#active'
-  get 'chatrooms/:id/contents/recent', to: 'chatrooms#recent'
   get 'chatrooms/:id/contents', to: 'chatrooms#contents'
   get 'chatrooms/:id/users', to: 'chatrooms#users'
   put 'chatrooms/:id/leave', to: 'chatrooms#leave'
@@ -33,5 +32,5 @@ Rails.application.routes.draw do
   get 'users', to: 'users#index'
   post 'users', to: 'users#create'
 
-
+  match '*not_found_route', to: 'application#not_found', via: [:get, :post, :put, :delete]
 end

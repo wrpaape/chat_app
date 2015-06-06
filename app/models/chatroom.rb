@@ -46,27 +46,7 @@ class Chatroom < ActiveRecord::Base
     end
   end
 
-  def get_contents
-    response_code = "200"
-    contents = []
-    return [contents, response_code] if self.contents == ""
-    contents_split2 = []
-    contents_split1 = self.contents.split("▓")
-    contents_split1.each do |pairs_w_ids|
-      contents_split2 << pairs_w_ids.split("▒")
-    end
-
-    contents_split2.each do |array|
-      entry_hash = {}
-      entry_hash[:name] =  array[0].split("░").first
-      entry_hash[:body] = array[1].split("░").first
-      contents << entry_hash
-    end
-
-    [contents, response_code]
-  end
-
-  def get_recent_contents(recent_timespan)
+  def get_contents(recent_timespan)
     response_code = "200"
     contents = []
     return [contents, response_code] if self.contents == ""
