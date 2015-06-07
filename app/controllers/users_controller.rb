@@ -118,6 +118,18 @@ class UsersController < ApplicationController
     end
   end
 
+  def logout
+    begin
+      current_user = User.find(params[:id])
+      response, response_code = current_user.logout
+      render_response(response, response_code)
+    rescue ActiveRecord::RecordNotFound => error
+      render_response(error.message, 404)
+    rescue StandardError => error
+      render_response(error.message, 422)
+    end
+  end
+
   def update
     begin
       response_code = "200"

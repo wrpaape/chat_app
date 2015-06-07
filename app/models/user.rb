@@ -50,6 +50,15 @@ class User < ActiveRecord::Base
     [current_chatrooms, response_code]
   end
 
+  def logout
+    response_code = "200"
+    current_chatrooms = self.current_chatrooms
+    current_chatrooms.each do |chatroom|
+      chatroom.leave(self.id)
+    end
+    [current_chatrooms, response_code]
+  end
+
   def name_taken?(name)
     User.where(name: name).size > 0 ? true : false
   end

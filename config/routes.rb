@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   post 'messages', to: 'messages#create'
 
   get 'users/new', to: 'users#new'
+  post 'users/logout', to: 'users#logout'
   get 'users/leaderboard', to: 'users#leaderboard'
   get 'users/:id/message_history', to: 'users#messages'
   get 'users/:id/chatrooms', to: 'users#chatrooms'
