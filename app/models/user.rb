@@ -32,6 +32,24 @@ class User < ActiveRecord::Base
     [response, response_code]
   end
 
+  def current_chatrooms
+    response_code = "200"
+    current_chatrooms = []
+    all_chatrooms = Chatroom.all
+    all_chatrooms.each do |chatroom|
+      current_users, dummy = chatroom.get_current_users
+      current_users.each do |user|
+        if user[:name] == self.name
+          entry_hash = {}
+          entry_hash[:name] = chatroom.name
+          entry_hash[:message_count] = user[:message_count]
+          current_chatrooms << entry_hash
+        end
+      end
+    end
+    [current_chatrooms, response_code]
+  end
+
   def name_taken?(name)
     User.where(name: name).size > 0 ? true : false
   end

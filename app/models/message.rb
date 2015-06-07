@@ -74,26 +74,26 @@ class Message < ActiveRecord::Base
       num_bombs.times do
         Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
         sleep(0.25)
+      end
         # lolbomb = Message.create(user_id: user_id, chatroom_id: chatroom_id, body: resp)
         # chatbot.update_message_history(lolbomb.id)
         # current_chatroom.new_message(chatbot, lolbomb)
 
-      when "kick"
-        witty_retorts = ["nice try", "stop that", "*rolls eyes*", "ACCESS DENIED", "nope", "pls stop", ""]
-        kickee_name = params.first
-        if kickee = User.find_by(name: kickee_name)
-          if user_id == 1
-            Net::HTTP.post_form(uri_leave, 'q' => 'ruby', 'user_id' => kickee.id)
-            resp = "*#{kickee_name}* was kicked from #{Chatroom.find(self.chatroom_id).name}"
-            Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
-          else
-            resp = witty_retorts[rand(0...witty_retorts.size)]
-            Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
-          end
+    when "kick"
+      witty_retorts = ["nice try", "stop that", "*rolls eyes*", "ACCESS DENIED", "nope", "pls stop", ""]
+      kickee_name = params.first
+      if kickee = User.find_by(name: kickee_name)
+        if user_id == 1
+          Net::HTTP.post_form(uri_leave, 'q' => 'ruby', 'user_id' => kickee.id)
+          resp = "*#{kickee_name}* was kicked from #{Chatroom.find(self.chatroom_id).name}"
+          Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
         else
-          resp = "user not found"
+          resp = witty_retorts[rand(0...witty_retorts.size)]
           Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
         end
+      else
+        resp = "user not found"
+        Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
       end
 
     when "roll"

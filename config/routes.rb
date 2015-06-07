@@ -24,6 +24,7 @@ Rails.application.routes.draw do
   get 'users/new', to: 'users#new'
   get 'users/leaderboard', to: 'users#leaderboard'
   get 'users/:id/message_history', to: 'users#messages'
+  get 'users/:id/chatrooms', to: 'users#chatrooms'
   post 'users/:id/settings/delete', to: 'users#settings_delete'
   post 'users/:id/settings/add', to: 'users#settings_add'
   get 'users/:id', to: 'users#show'
