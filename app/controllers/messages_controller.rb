@@ -1,5 +1,5 @@
 class MessagesController < ApplicationController
-  CHATBOT = ["lolbomb", "proudmom", "spam", "kick"]
+  CHATBOT = ["lolbomb", "proudmom", "spam", "kick", "roll"]
 
   def index
     begin

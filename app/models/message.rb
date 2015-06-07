@@ -95,6 +95,15 @@ class Message < ActiveRecord::Base
           Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
         end
       end
+
+    when "roll"
+      outcomes = ["⚀ ", "⚁ ", "⚂ ", "⚃ ", "⚄ ", "⚅ "]
+      params.first.nil? ? num_dice = 1 : num_dice = params.first.to_i
+      resp = ""
+      num_dice.times do
+        resp += outcomes[rand(0..5)]
+      end
+      Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
     end
   end
 
