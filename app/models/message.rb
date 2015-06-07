@@ -83,7 +83,7 @@ class Message < ActiveRecord::Base
       witty_retorts = ["nice try", "stop that", "*rolls eyes*", "ACCESS DENIED", "nope", "pls stop", ""]
       kickee_name = params.first
       if kickee = User.find_by(name: kickee_name)
-        if user_id == 1
+        if user_id == "1"
           Net::HTTP.post_form(uri_leave, 'q' => 'ruby', 'user_id' => kickee.id)
           resp = "*#{kickee_name}* was kicked from #{Chatroom.find(self.chatroom_id).name}"
           Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
