@@ -52,9 +52,10 @@ class User < ActiveRecord::Base
 
   def logout
     response_code = "200"
-    current_chatrooms = self.current_chatrooms
+    current_chatrooms, dummy = self.current_chatrooms
     current_chatrooms.each do |chatroom|
-      chatroom.leave(self.id)
+      chatroom_inst = Chatroom.find_by(name: chatroom[:name])
+      chatroom_inst.leave(self.id)
     end
     [current_chatrooms, response_code]
   end

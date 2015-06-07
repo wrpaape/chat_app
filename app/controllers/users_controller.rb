@@ -120,7 +120,7 @@ class UsersController < ApplicationController
 
   def logout
     begin
-      current_user = User.find(params[:id])
+      current_user = User.find(params[:user_id])
       response, response_code = current_user.logout
       render_response(response, response_code)
     rescue ActiveRecord::RecordNotFound => error

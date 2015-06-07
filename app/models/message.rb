@@ -109,6 +109,8 @@ class Message < ActiveRecord::Base
 
   def filter_body
     filtered_body = self.body.gsub("/me", "*#{User.find(self.user_id).name}*")
+    filtered_body = self.body.gsub("tiy ", "Maker's Square")
+    filtered_body = self.body.gsub("justin", "aaron")
   end
 end
 
