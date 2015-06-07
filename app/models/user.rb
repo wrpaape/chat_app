@@ -112,7 +112,8 @@ class User < ActiveRecord::Base
     [message_history, response_code]
   end
 
-  def get_leaderboard(timespan = 3600 * 4)
+  def get_leaderboard(timespan)
+    timespan = 14400 if timespan == 0
     current_time = Time.new
     cutoff_time = current_time - timespan
     response_code = "200"
