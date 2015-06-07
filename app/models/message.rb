@@ -17,8 +17,8 @@ class Message < ActiveRecord::Base
   end
 
   def chatbot(user_id, command, params)
-    uri = URI('https://young-spire-1181.herokuapp.com/messages')
-    uri_leave = URI("https://young-spire-1181.herokuapp.com/chatrooms/#{self.chatroom_id.to_s}/leave")
+    uri = URI('https://agile-chamber-3594.herokuapp.com/messages')
+    uri_leave = URI("https://agile-chamber-3594.herokuapp.com/chatrooms/#{self.chatroom_id.to_s}/leave")
     # uri = URI('http://localhost:3000/messages')
     chatbot = User.find_by(name: "chatbot")
     user = User.find(user_id)
