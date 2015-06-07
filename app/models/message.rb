@@ -1,6 +1,5 @@
 require 'net/http'
 require 'uri'
-require 'securerandom'
 
 class Message < ActiveRecord::Base
   def get(params)
