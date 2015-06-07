@@ -67,8 +67,8 @@ class Message < ActiveRecord::Base
       Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => message, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
 
     when "spam"
-      resp = params.drop(1).join(":")
       num_bombs = params.shift.to_i
+      resp = params.join(":")
       num_bombs.times do
         Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
         sleep(0.25)
