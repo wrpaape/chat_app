@@ -34,7 +34,6 @@ class Message < ActiveRecord::Base
         # current_chatroom.new_message(chatbot, lolbomb)
       end
     when "proudmom"
-      puts "**************"
       score_total = {sexual: 0, inappropriate: 0, discriminatory: 0, insult: 0, blasphemy: 0}
       disp_type = {sexual: "sexual", inappropriate: "inappropriate", discriminatory: "discriminatory", insult: "insulting", blasphemy: "blasphemous"}
       history = user.get_message_history[0][:body]
@@ -44,7 +43,7 @@ class Message < ActiveRecord::Base
       end
 
       non_zero_total = {}
-      score_total.each |type, count|
+      score_total.each do |type, count|
         non_zero_total[type] = count if count > 0
       end
 
@@ -53,7 +52,7 @@ class Message < ActiveRecord::Base
       else
         message = "*#{user.name}* has made "
         ind = 0
-        non_zero_total.each |type, count|
+        non_zero_total.each do |type, count|
           message += "#{count.to_s} #{disp_type[type]} "
           ind += 1
           message += "and " if ind == non_zero_total.size - 1
