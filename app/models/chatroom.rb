@@ -141,7 +141,7 @@ class Chatroom < ActiveRecord::Base
   def new_message(current_user, new_message)
     response_code = "200"
     self.message_count += 1
-    self.contents += current_user.name + "░" + current_user.id.to_s + "▒" + new_message.body + "░" + new_message.id.to_s + "▓"
+    self.contents += current_user.name + "░" + current_user.id.to_s + "▒" + new_message[:body] + "░" + new_message[:id].to_s + "▓"
     self.save
     [self, response_code]
   end

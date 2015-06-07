@@ -1,6 +1,6 @@
 class MessagesController < ApplicationController
   CHATBOT = {
-    lolbomb: "LOLOLOLOLOLOL"
+    lolbomb: "LOLOLOLOLOLOLOLOLOLOL"
   }
 
   def index
@@ -33,12 +33,14 @@ class MessagesController < ApplicationController
       end
       current_user = User.find(params[:user_id])
       current_chatroom = Chatroom.find(params[:chatroom_id])
+
       new_message = Message.create(create_params)
+      filtered_body = new_message.filter_body
 
       current_user.update_message_history(new_message.id)
-      current_chatroom.new_message(current_user, new_message)
+      current_chatroom.new_message(current_user, {id: new_message.id, body: filtered_body})
 
-      new_message.chatbot(params[:user_id], params[:chatroom_id], params[:body], CHATBOT) if CHATBOT.keys.include?(params[:body].split(":").first.to_sym)
+      new_message.chatbot(CHATBOT) if CHATBOT.keys.include?(params[:body].split(":").first.to_sym)
 
 
       render_response(new_message, 200)
