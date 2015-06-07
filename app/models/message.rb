@@ -97,13 +97,27 @@ class Message < ActiveRecord::Base
       end
 
     when "roll"
-      outcomes = ["⚀ ", "⚁ ", "⚂ ", "⚃ ", "⚄ ", "⚅ "]
+      outcomes = [[" _____  ", " _____  ", " _____  ", " _____  ", " _____  ", " _____  "],
+                  ["|     | ", "| o   | ", "| o   | ", "| o o | ", "| o o | ", "| o o | "],
+                  ["|  o  | ", "|     | ", "|  o  | ", "|     | ", "|  o  | ", "| o o | "],
+                  ["|     | ", "|   o | ", "|   o | ", "| o o | ", "| o o | ", "| o o | "],
+                  [" ¯¯¯¯¯  ", " ¯¯¯¯¯  ", " ¯¯¯¯¯  ", " ¯¯¯¯¯  ", " ¯¯¯¯¯  ", " ¯¯¯¯¯  "]]
+      # outcomes = ["⚀ ", "⚁ ", "⚂ ", "⚃ ", "⚄ ", "⚅ "]
       params.first.nil? ? num_dice = 1 : num_dice = params.first.to_i
-      resp = ""
+      rolls = []
       num_dice.times do
-        resp += outcomes[rand(0..5)]
+        rolls << rand(0..5)
       end
-      Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
+      resp = ["","","","",""]
+      rolls.each do |roll|
+        outcomes.each.with_index do |line, index|
+          resp[index] += line[roll]
+        end
+      end
+
+      resp.each do |line|
+        Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => line, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
+      end
 
     when "settings"
       action = params.first
