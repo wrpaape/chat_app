@@ -97,11 +97,6 @@ class Message < ActiveRecord::Base
       end
 
     when "roll"
-      # outcomes = [[" _____   ", " _____   ", " _____   ", " _____   ", " _____   ", " _____   "],
-      #             ["|     |  ", "| o   |  ", "| o   |  ", "| o o |  ", "| o o |  ", "| o o |  "],
-      #             ["|  o  |  ", "|     |  ", "|  o  |  ", "|     |  ", "|  o  |  ", "| o o |  "],
-      #             ["|     |  ", "|   o |  ", "|   o |  ", "| o o |  ", "| o o |  ", "| o o |  "],
-      #             [" ¯¯¯¯¯   ", " ¯¯¯¯¯   ", " ¯¯¯¯¯   ", " ¯¯¯¯¯   ", " ¯¯¯¯¯   ", " ¯¯¯¯¯   "]]
 outcomes  =  [["______     ", "______     ", "______     ", "______     ", "______     ", "______     "],
 ["|          |    ", "|  o      |    ", "|  o      |    ", "|  o  o  |    ", "|  o  o  |    ", "|  o  o  |    "],
 ["|    o    |    ", "|          |    ", "|    o    |    ", "|          |    ", "|    o    |    ", "|  o  o  |    "],
@@ -146,13 +141,43 @@ outcomes  =  [["______     ", "______     ", "______     ", "____
               "http://www.thatcutesite.com/uploads/2011/03/cat_dressed_as_lion_tree.jpg"]
       resp = cats[rand(0...cats.size)]
       Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
+    when "8ball"
+      responses = ["It is certain",
+                  "It is decidedly so",
+                  "Without a doubt",
+                  "Yes definitely",
+                  "You may rely on it",
+                  "As I see it, yes",
+                  "Most likely",
+                  "Outlook good",
+                  "Yes",
+                  "Signs point to yes",
+                  "Reply hazy try again",
+                  "Ask again later",
+                  "Better not tell you now",
+                  "Cannot predict now",
+                  "Concentrate and ask again",
+                  "Don't count on it",
+                  "My reply is no",
+                  "My sources say no",
+                  "Outlook not so good",
+                  "Very doubtful"]
+      resp = responses[rand(0...responses.size)]
+      Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
     end
   end
 
   def filter_body
     filtered_body = self.body.gsub("/me", "*#{User.find(self.user_id).name}*")
-    filtered_body = self.body.gsub("the iron yard", "maker's square")
-    filtered_body = self.body.gsub("justin", "aaron")
+    filtered_body.gsub!("the iron yard", "maker's square")
+    filtered_body.gsub!("heroku", "beezlebub")
+    filtered_body.gsub!("justin", "     ")
+    filtered_body.gsub!("aaron", "justin")
+    filtered_body.gsub!("     ", "aaron")
+    filtered_body.gsub!("love", "     ")
+    filtered_body.gsub!("hate", "love")
+    filtered_body.gsub!("     ", "hate")
+    filtered_body
   end
 end
 
