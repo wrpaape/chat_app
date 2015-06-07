@@ -112,18 +112,20 @@ class User < ActiveRecord::Base
     [message_history, response_code]
   end
 
-  def get_leaderboard(timespan)
+  def get_leaderboard(timespan = 3600 * 4)
     current_time = Time.new
     cutoff_time = current_time - timespan
     response_code = "200"
-    leaderboard = []
-    leaderboard[:recent_users] = []
+    response = {}
+    response[:leaderboard] = []
+    response[:recent_users] = []
+
     top_users = User.order(message_count: :desc).limit(10)
     top_users.each do |top_user|
       entry = {}
       entry[:user_name] = top_user.name
       entry[:message_count] = top_user.message_count
-      leaderboard << entry
+      response[:leaderboard] << entry
     end
     recent_messages = Message.where("created_at > ?", cutoff_time).order(created_at: :desc)
     recent_ids = []
@@ -132,9 +134,9 @@ class User < ActiveRecord::Base
     end
     recent_users = User.where(id: recent_ids)
     recent_users.each do |recent_user|
-      leaderboard[:recent_users] << recent_user.name
+      response[:recent_users] << recent_user.name
     end
-    [leaderboard, response_code]
+    [response, response_code]
   end
 end
 
