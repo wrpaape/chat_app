@@ -53,7 +53,11 @@ class Message < ActiveRecord::Base
         message = "*#{user.name}* has made "
         ind = 0
         non_zero_total.each do |type, count|
-          message += "#{count.to_s} #{disp_type[type]} "
+          if ind == non_zero_total.size - 1
+            message += "#{count.to_s} #{disp_type[type]} "
+          else
+            message += "#{count.to_s} #{disp_type[type]}, "
+          end
           ind += 1
           message += "and " if ind == non_zero_total.size - 1
         end
