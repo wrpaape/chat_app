@@ -88,15 +88,15 @@ class Chatroom < ActiveRecord::Base
       end
     end
 
-    # if user_settings.include?("espanol")
-    #   raw_contents.each do |raw_entry_hash|
-    #     entry_hash = {}
-    #     entry_hash[:name] = raw_entry_hash[:name]
-    #     entry_hash[:body] = EasyTranslate.translate(raw_entry_hash[:body], :to => 'es')
-    #     entry_hash[:timestamp] = raw_entry_hash[:timestamp]
-    #     filtered_contents << entry_hash
-    #   end
-    # end
+    if user_settings.include?("espanol")
+      raw_contents.each do |raw_entry_hash|
+        entry_hash = {}
+        entry_hash[:name] = raw_entry_hash[:name]
+        entry_hash[:body] = EasyTranslate.translate(raw_entry_hash[:body], :to => 'es')
+        entry_hash[:timestamp] = raw_entry_hash[:timestamp]
+        filtered_contents << entry_hash
+      end
+    end
 
     [filtered_contents, response_code]
   end
