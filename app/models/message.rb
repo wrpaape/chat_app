@@ -104,6 +104,19 @@ class Message < ActiveRecord::Base
         resp += outcomes[rand(0..5)]
       end
       Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
+
+    when "settings"
+      action = params.first
+      setting = params[1]
+      uri_settings = URI("https://agile-chamber-3594.herokuapp.com/users/#{user.id}/settings/#{action}")
+
+      Net::HTTP.post_form(uri_settings, 'q' => 'ruby', 'settings' => setting)
+      if action == "add"
+        resp = "*#{user.name}* added the setting '#{setting}'"
+      elsif action == "delete"
+        resp = "*#{user.name}* added the setting '#{setting}'"
+      end
+        Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
     end
   end
 
