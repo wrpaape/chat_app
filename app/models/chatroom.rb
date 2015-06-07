@@ -76,11 +76,23 @@ class Chatroom < ActiveRecord::Base
     response_code = "200"
     filtered_contents = []
     user_settings = User.find(user_id).settings.split("+")
-    if user_settings.include?("default")
+    if user_settings.include?("uncensor")
+      filtered_contents = raw_contents
+    else
       raw_contents.each do |raw_entry_hash|
         entry_hash = {}
         entry_hash[:name] = Swearjar.default.censor(raw_entry_hash[:name])
         entry_hash[:body] = Swearjar.default.censor(raw_entry_hash[:body])
+        entry_hash[:timestamp] = raw_entry_hash[:timestamp]
+        filtered_contents << entry_hash
+      end
+    end
+
+    if user_settings.include?("espanol")
+      raw_contents.each do |raw_entry_hash|
+        entry_hash = {}
+        entry_hash[:name] = raw_entry_hash[:name]
+        entry_hash[:body] = EasyTranslate.translate(raw_entry_hash[:body], :to => 'es')
         entry_hash[:timestamp] = raw_entry_hash[:timestamp]
         filtered_contents << entry_hash
       end

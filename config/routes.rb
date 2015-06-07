@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   get 'chatrooms/:id/contents', to: 'chatrooms#contents'
   get 'chatrooms/:id/users', to: 'chatrooms#users'
   post 'chatrooms/:id/leave', to: 'chatrooms#leave'
-  post 'chatrooms/:id/join_room', to: 'chatrooms#join_room'
   post 'chatrooms/:id/join', to: 'chatrooms#join'
   get 'chatrooms/:id', to: 'chatrooms#show'
   post 'chatrooms/:id', to: 'chatrooms#update'
