@@ -39,8 +39,9 @@ class MessagesController < ApplicationController
       current_chatroom.new_message(current_user, {id: new_message.id, body: filtered_body})
 
       CHATBOT.each do |command|
-        if params[:body].split(":").first == command
-          command_params = params[:body].split(":")[1]
+        body_array = params[:body].split(":")
+        if body_array.first == command
+          command_params = body_array.drop(1)
           new_message.chatbot(params[:user_id], command, command_params)
           break
         end
