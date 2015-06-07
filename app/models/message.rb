@@ -117,12 +117,22 @@ class Message < ActiveRecord::Base
         resp = "*#{user.name}* added the setting '#{setting}'"
       end
         Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
+    when "cat"
+      cats = ["http://i150.photobucket.com/albums/s85/michelleNpete/BaBas/awesome-beautiful-blue-eyes-cat-cute-Favimcom-110476.jpg",
+              "http://i110.photobucket.com/albums/n114/corsiphoto/tumblr_m00l5xLSbi1qjc1a7o1_500.jpg",
+              "http://i794.photobucket.com/albums/yy228/jade95_2010/PHOTOGRAPHY-VARIED/cat-face.jpg",
+              "http://i415.photobucket.com/albums/pp236/Keefers_/Keffers%20Animals/funny-cats-a10.jpg",
+              "http://i415.photobucket.com/albums/pp236/Keefers_/Keffers%20Animals/1669501g8hvdviejo.jpg",
+              "http://i415.photobucket.com/albums/pp236/Keefers_/Keffers%20Animals/DSC00549.jpg",
+              "http://www.thatcutesite.com/uploads/2011/03/cat_dressed_as_lion_tree.jpg"]
+      resp = cats[rand(0...cats.size)]
+      Net::HTTP.post_form(uri, 'q' => 'ruby', 'body' => resp, 'user_id' => chatbot.id, 'chatroom_id' => self.chatroom_id)
     end
   end
 
   def filter_body
     filtered_body = self.body.gsub("/me", "*#{User.find(self.user_id).name}*")
-    filtered_body = self.body.gsub("tiy ", "Maker's Square")
+    filtered_body = self.body.gsub("the iron yard", "maker's square")
     filtered_body = self.body.gsub("justin", "aaron")
   end
 end
