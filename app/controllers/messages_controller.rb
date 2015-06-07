@@ -1,7 +1,5 @@
 class MessagesController < ApplicationController
-  CHATBOT = {
-    lolbomb: "LOLOLOLOLOLOLOLOLOLOL"
-  }
+  CHATBOT = ["lolbomb", "proudmom", "rank"]
 
   def index
     begin
@@ -40,8 +38,13 @@ class MessagesController < ApplicationController
       current_user.update_message_history(new_message.id)
       current_chatroom.new_message(current_user, {id: new_message.id, body: filtered_body})
 
-      new_message.chatbot(CHATBOT) if CHATBOT.keys.include?(params[:body].split(":").first.to_sym)
-
+      CHATBOT.each do |command|
+        if params[:body].split(":").first == command
+          command_params = params[:body].split(":")[1]
+          new_message.chatbot(params[:user_id], command, command_params)
+          break
+        end
+      end
 
       render_response(new_message, 200)
       rescue ActiveRecord::RecordNotFound => error

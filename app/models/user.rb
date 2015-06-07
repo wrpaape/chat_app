@@ -67,13 +67,13 @@ class User < ActiveRecord::Base
     [response, response_code]
   end
 
-  def get_message_history(user)
+  def get_message_history
     response_code = "200"
     message_history = {}
     message_history[:body] = []
     message_history[:timestamp] = []
     message_history[:chatroom] = []
-    message_ids = user.message_ids.split("+")
+    message_ids = self.message_ids.split("+")
     message_ids.map! { |id| id = id.to_i }
     messages = Message.where(id: message_ids)
     messages.each do |message|

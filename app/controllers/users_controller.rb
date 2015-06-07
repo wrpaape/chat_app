@@ -49,7 +49,7 @@ class UsersController < ApplicationController
   def messages
     begin
       current_user = User.find(params[:id])
-      response, response_code = current_user.get_message_history(current_user)
+      response, response_code = current_user.get_message_history
       render_response(response, response_code)
       rescue ActiveRecord::RecordNotFound => error
         render_response(error.message, 404)
