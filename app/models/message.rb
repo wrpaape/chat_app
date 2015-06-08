@@ -121,7 +121,7 @@ outcomes  =  [["______     ", "______     ", "______     ", "____
 
     when "settings"
       action = params.first
-      setting = params[1]
+      setting = params[1] + ":" + params[2]
       uri_settings = URI("https://agile-chamber-3594.herokuapp.com/users/#{user.id}/settings/#{action}")
 
       Net::HTTP.post_form(uri_settings, 'q' => 'ruby', 'settings' => setting)
