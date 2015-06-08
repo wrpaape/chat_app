@@ -46,9 +46,26 @@ class Chatroom < ActiveRecord::Base
     end
   end
 
-  def get_contents(recent_timespan)
+  def get_contents(user_id)
     response_code = "200"
     contents = []
+    user_settings = User.find(user_id).settings.split("+")
+    if user_settings.include?(":a")
+      recent_timespan = 0
+    elsif user_settings.include?(":b")
+      recent_timespan = 60
+    elsif user_settings.include?(":c")
+      recent_timespan = 60 * 5
+    elsif user_settings.include?(":d")
+      recent_timespan = 60 * 15
+    elsif user_settings.include?(":e")
+      recent_timespan = 60 * 60
+    elsif user_settings.include?(":f")
+      recent_timespan = 60 * 24 * 365
+    else
+      recent_timespan = 60 * 5
+    end
+
     return [contents, response_code] if self.contents == ""
     current_time = Time.new
     cutoff_time = current_time - recent_timespan
@@ -76,7 +93,7 @@ class Chatroom < ActiveRecord::Base
     response_code = "200"
     filtered_contents = []
     user_settings = User.find(user_id).settings.split("+")
-    if user_settings.include?("uncensor")
+    if user_settings.include?("censor:off")
       filtered_contents = raw_contents
     else
       raw_contents.each do |raw_entry_hash|

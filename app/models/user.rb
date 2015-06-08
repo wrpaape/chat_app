@@ -4,7 +4,6 @@ class User < ActiveRecord::Base
     search_query = {}
 
     params.each do |k, v|
-      puts k.inspect
       search_query[k] = v if k == "id" || k == "name" || k == "password" || k == "settings" || k == "message_ids"
     end
 
@@ -71,7 +70,30 @@ class User < ActiveRecord::Base
   end
 
   def settings_add(settings)
-    self.settings += settings + "+"
+    pairs = self.settings.split("+")
+    settings_hash = {}
+    pairs.each do |pair|
+      settings_hash[pair.split(":")[0].to_sym] = pair.split(":")[1]
+    end
+    key = settings.split(":").first
+    value = settings.split(":")[1]
+
+    case key
+    when "censor"
+      settings_hash[:censor] = value
+    when "contents_timespan"
+      settings_hash[:contents_timespan] = value
+    when "recent_users_timespan"
+      settings_hash[:recent_users_timespan] = value
+    else
+      settings_hash[key.to_sym] = " "
+    end
+    settings_string = ""
+    settings_hash.each do |k, v|
+      settings_string += k.to_s + ":" + v + "+"
+    end
+
+    self.settings = settings_string
     self.save
     [self, "200"]
   end
@@ -112,10 +134,26 @@ class User < ActiveRecord::Base
     [message_history, response_code]
   end
 
-  def get_leaderboard(timespan)
-    timespan = 14400 if timespan == 0
+  def get_leaderboard(user_id)
+    user_settings = User.find(user_id).settings.split("+")
+    if user_settings.include?(":1")
+      recent_timespan = 60 * 5
+    elsif user_settings.include?(":2")
+      recent_timespan = 60 * 15
+    elsif user_settings.include?(":3")
+      recent_timespan = 60 * 30
+    elsif user_settings.include?(":4")
+      recent_timespan = 60 * 60
+    elsif user_settings.include?(":5")
+      recent_timespan = 60 * 60 * 2
+    elsif user_settings.include?(":6")
+      recent_timespan = 60 * 60 * 4
+    else
+      recent_timespan = 60 * 60 * 4
+    end
+
     current_time = Time.new
-    cutoff_time = current_time - timespan
+    cutoff_time = current_time - recent_timespan
     response_code = "200"
     response = {}
     response[:leaderboard] = []
