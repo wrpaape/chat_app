@@ -34,6 +34,8 @@ $ rails s
 - Now you can access the api locally
 - Additionally this api is stored on the heroku server:  https://agile-chamber-3594.herokuapp.com
 - refer to https://hackpad.com/ChatApp-nGvuzho20ca for basic database structure, and how to route and form data queries
+- refer to https://trello.com/b/B79on2Oz/chat-app for project timeline
+- refer to https://awg24.github.io/dist/ for the complete chatroom app
 
 ###Topics
 - Learn about the core principles of Agile development.
