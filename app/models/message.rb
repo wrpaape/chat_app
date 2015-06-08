@@ -171,12 +171,12 @@ outcomes  =  [["______     ", "______     ", "______     ", "____
     filtered_body = self.body.gsub("/me", "*#{User.find(self.user_id).name}*")
     filtered_body.gsub!("the iron yard", "maker's square")
     filtered_body.gsub!("heroku", "beezlebub")
-    filtered_body.gsub!("justin", "     ")
+    filtered_body.gsub!("justin", "  +  ")
     filtered_body.gsub!("aaron", "justin")
-    filtered_body.gsub!("     ", "aaron")
-    filtered_body.gsub!("love", "     ")
+    filtered_body.gsub!("  +  ", "aaron")
+    filtered_body.gsub!("love", "  +  ")
     filtered_body.gsub!("hate", "love")
-    filtered_body.gsub!("     ", "hate")
+    filtered_body.gsub!("  +  ", "hate")
     filtered_body
   end
 end
