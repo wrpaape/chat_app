@@ -82,7 +82,7 @@ class Chatroom < ActiveRecord::Base
       entry_hash = {}
       entry_hash[:name] =  array[0].split("░").first
       entry_hash[:body] = array[1].split("░").first
-      entry_hash[:timestamp] = message_time.strftime("%T %p")
+      entry_hash[:timestamp] = message_time.strftime("%r")
       contents << entry_hash
     end
 
@@ -115,7 +115,7 @@ class Chatroom < ActiveRecord::Base
       end
     end
 
-    header = {name: "chatbot", body: "Welcome to the no fun zone!", timestamp: Message.find(1).created_at.strftime("%T %p")}
+    header = {name: "chatbot", body: "Welcome to the no fun zone!", timestamp: Message.find(1).created_at.strftime("%r")}
     filtered_contents.unshift(header) unless filtered_contents[0] == header
 
 
