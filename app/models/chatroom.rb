@@ -115,7 +115,9 @@ class Chatroom < ActiveRecord::Base
       end
     end
 
-    filtered_contents = [{name: "chatbot", body: "Welcome to the no fun zone!", timestamp: Message.find(1).created_at.strftime("%T %p")}] if filtered_contents == []
+    header = {name: "chatbot", body: "Welcome to the no fun zone!", timestamp: Message.find(1).created_at.strftime("%T %p")}
+    filtered_contents.unshift(header) unless filtered_contents[0] == header
+
 
     [filtered_contents, response_code]
   end
