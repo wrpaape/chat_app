@@ -80,7 +80,7 @@ class Message < ActiveRecord::Base
         # current_chatroom.new_message(chatbot, lolbomb)
 
     when "kick"
-      witty_retorts = ["nice try", "stop that", "*rolls eyes*", "ACCESS DENIED", "nope", "pls stop", ""]
+      witty_retorts = ["nice try", "stop that", "*rolls eyes*", "ACCESS DENIED", "nope", "pls stop"]
       kickee_name = params.first
       if kickee = User.find_by(name: kickee_name)
         if user_id == "1"
