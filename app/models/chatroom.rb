@@ -86,7 +86,6 @@ class Chatroom < ActiveRecord::Base
       contents << entry_hash
     end
 
-# contents = [{name: "chatbot", body: "Welcome to the no fun zone!", timestamp: Message.find(1).created_at.strftime("%T %p")}]
     [contents, response_code]
   end
 
@@ -115,7 +114,8 @@ class Chatroom < ActiveRecord::Base
         filtered_contents << entry_hash
       end
     end
-filtered_contents = [{name: "chatbot", body: "Welcome to the no fun zone!", timestamp: Message.find(1).created_at.strftime("%T %p")}]
+
+    filtered_contents = [{name: "chatbot", body: "Welcome to the no fun zone!", timestamp: Message.find(1).created_at.strftime("%T %p")}] if filtered_contents == []
 
     [filtered_contents, response_code]
   end
