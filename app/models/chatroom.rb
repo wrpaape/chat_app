@@ -66,7 +66,7 @@ class Chatroom < ActiveRecord::Base
       recent_timespan = 60 * 5
     end
 
-    return [contents, response_code] if self.contents == ""
+    return [[{name: "", body: "", timestamp: ""}], response_code] if self.contents == ""
     current_time = Time.new
     cutoff_time = current_time - recent_timespan
     contents_split2 = []
@@ -86,6 +86,7 @@ class Chatroom < ActiveRecord::Base
       contents << entry_hash
     end
 
+    contents = [{name: "", body: "", timestamp: ""}] if contents = []
     [contents, response_code]
   end
 
